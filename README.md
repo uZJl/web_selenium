@@ -12,6 +12,7 @@
 - **Allure 报告** - 详细测试报告
 - **Page Object** - 封装页面元素和操作
 - **YAML 配置** - 灵活的配置管理
+- **动态测试用例** - 通过 API 创建测试用例，MySQL 存储，无需编写代码
 
 ## 项目结构
 
@@ -593,7 +594,140 @@ curl http://localhost:8080/api/test/health
 - **Selenium WebDriver 4.18.1** - 浏览器自动化
 - **TestNG 7.9.0** - 测试框架
 - **Spring Boot 2.7.18** - REST API 服务
+- **MySQL 8.0** - 测试用例存储
 - **WebDriverManager 5.7.0** - 驱动管理
 - **Allure 2.25.0** - 测试报告
 - **Log4j2** - 日志框架
 - **Docker Compose** - 容器编排
+
+## 动态测试用例管理（推荐）
+
+通过 API 动态创建、管理、执行测试用例，用例存储在 MySQL 数据库中，无需编写代码。
+
+### 功能特点
+
+- **零代码创建用例** - 通过 JSON 格式定义测试步骤
+- **MySQL 持久化** - 测试用例与工程分离，独立管理
+- **实时执行** - 创建后立即执行，支持多种操作类型
+- **执行历史追踪** - 记录每次执行结果，便于分析
+
+### 部署 MySQL
+
+```bash
+# 启动 MySQL 容器
+docker run -d --name selenium-mysql \
+  -e MYSQL_ROOT_PASSWORD=root123 \
+  -e MYSQL_DATABASE=selenium_test \
+  -p 3306:3306 \
+  mysql:8.0
+
+# 启动 API 服务（配置数据库连接）
+export DB_HOST=172.17.0.1
+export DB_NAME=selenium_test
+export DB_USER=root
+export DB_PASS=root123
+export GRID_URL=http://localhost:4444/wd/hub
+
+java -jar target/web_selenium-1.0-SNAPSHOT.jar
+```
+
+### 测试用例 API
+
+| 端点 | 方法 | 说明 |
+|------|------|------|
+| `/api/testcase` | POST | 创建测试用例 |
+| `/api/testcase` | GET | 获取所有用例 |
+| `/api/testcase/{id}` | GET | 获取单个用例 |
+| `/api/testcase/{id}` | PUT | 更新用例 |
+| `/api/testcase/{id}` | DELETE | 删除用例 |
+| `/api/testcase/{id}/run` | POST | 执行用例 |
+| `/api/testcase/status/{taskId}` | GET | 查询执行状态 |
+| `/api/testcase/{id}/history` | GET | 获取执行历史 |
+
+### 支持的操作类型
+
+| Action | 说明 | 必需参数 |
+|--------|------|----------|
+| `open` | 打开URL | - |
+| `input` | 输入文本 | `locator`, `value` |
+| `click` | 点击元素 | `locator` |
+| `select` | 下拉选择 | `locator`, `value` |
+| `wait` | 固定等待 | `timeout` |
+| `wait_for` | 等待元素 | `locator` |
+| `assert` | 断言状态 | `locator`, `condition` |
+| `assert_text` | 断言文本 | `locator`, `value` |
+| `script` | 执行JS | `value` |
+| `screenshot` | 截图 | - |
+| `refresh` | 刷新页面 | - |
+
+### 定位器格式
+
+| 格式 | 示例 |
+|------|------|
+| ID | `id=username` |
+| name | `name=email` |
+| CSS | `#login-btn` 或 `.btn-primary` |
+| XPath | `//div[@class="test"]` |
+| class | `class=btn` |
+| 链接文本 | `link=点击这里` |
+
+### 断言条件
+
+| Condition | 说明 |
+|-----------|------|
+| `visible` | 元素可见 |
+| `hidden` | 元素隐藏 |
+| `present` | 元素存在 |
+| `clickable` | 元素可点击 |
+
+### 使用示例
+
+```bash
+# 1. 创建测试用例
+curl -X POST http://服务器IP:8080/api/testcase \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "百度搜索测试",
+    "description": "验证百度搜索功能",
+    "browser": "chrome",
+    "url": "https://www.baidu.com",
+    "steps": [
+      {"action": "open", "description": "打开百度首页"},
+      {"action": "input", "locator": "#kw", "value": "Selenium\n", "description": "输入关键词并回车"},
+      {"action": "wait_for", "locator": ".result", "timeout": 10, "description": "等待结果"},
+      {"action": "assert", "locator": ".result", "condition": "visible", "description": "验证结果"}
+    ],
+    "enabled": true
+  }'
+
+# 2. 查看所有用例
+curl http://服务器IP:8080/api/testcase
+
+# 3. 执行用例
+curl -X POST http://服务器IP:8080/api/testcase/1/run
+# 返回: {"code":200,"data":"abc12345",...}
+
+# 4. 查询执行状态
+curl http://服务器IP:8080/api/testcase/status/abc12345
+
+# 5. 更新用例
+curl -X PUT http://服务器IP:8080/api/testcase/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"更新后的用例",...}'
+
+# 6. 删除用例
+curl -X DELETE http://服务器IP:8080/api/testcase/1
+```
+
+### 执行结果示例
+
+```json
+{
+  "taskId": "abc12345",
+  "status": "COMPLETED",
+  "totalSteps": 4,
+  "passedSteps": 4,
+  "duration": 1639,
+  "executedAt": "2026-03-23T19:53:45"
+}
+```
