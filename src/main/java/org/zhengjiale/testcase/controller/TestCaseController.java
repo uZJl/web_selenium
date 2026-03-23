@@ -2,13 +2,17 @@ package org.zhengjiale.testcase.controller;
 
 import org.zhengjiale.api.ApiResponse;
 import org.zhengjiale.testcase.dto.TestCaseRequest;
+import org.zhengjiale.testcase.dto.TestReport;
 import org.zhengjiale.testcase.entity.TestCase;
 import org.zhengjiale.testcase.entity.TestExecution;
 import org.zhengjiale.testcase.executor.TestCaseExecutor;
 import org.zhengjiale.testcase.service.TestCaseService;
+import org.zhengjiale.testcase.service.TestReportService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +33,9 @@ public class TestCaseController {
 
     @Autowired
     private TestCaseExecutor testCaseExecutor;
+
+    @Autowired
+    private TestReportService testReportService;
 
     /**
      * 创建测试用例
@@ -149,5 +156,33 @@ public class TestCaseController {
     public ResponseEntity<ApiResponse<List<TestExecution>>> getRecentExecutions() {
         List<TestExecution> executions = testCaseService.getRecentExecutions();
         return ResponseEntity.ok(ApiResponse.success(executions));
+    }
+
+    /**
+     * 获取测试报告（JSON）
+     * GET /api/testcase/report/{taskId}
+     */
+    @GetMapping("/report/{taskId}")
+    public ResponseEntity<ApiResponse<TestReport>> getReport(@PathVariable String taskId) {
+        TestReport report = testReportService.getReport(taskId);
+        if (report == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ApiResponse.success(report));
+    }
+
+    /**
+     * 获取测试报告（HTML）
+     * GET /api/testcase/report/{taskId}/html
+     */
+    @GetMapping(value = "/report/{taskId}/html", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> getReportHtml(@PathVariable String taskId) {
+        TestReport report = testReportService.getReport(taskId);
+        if (report == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE + ";charset=UTF-8")
+                .body(report.getReportHtml());
     }
 }

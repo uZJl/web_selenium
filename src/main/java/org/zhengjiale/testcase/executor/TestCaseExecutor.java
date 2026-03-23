@@ -3,6 +3,8 @@ package org.zhengjiale.testcase.executor;
 import org.zhengjiale.testcase.entity.TestCase;
 import org.zhengjiale.testcase.entity.TestExecution;
 import org.zhengjiale.testcase.entity.TestStep;
+import org.zhengjiale.testcase.entity.TestStepResult;
+import org.zhengjiale.testcase.repository.TestStepResultRepository;
 import org.zhengjiale.testcase.service.TestCaseService;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +20,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +42,11 @@ public class TestCaseExecutor {
     @Autowired
     private TestCaseService testCaseService;
 
+    @Autowired
+    private TestStepResultRepository stepResultRepository;
+
     private final Map<String, TestExecution> executions = new ConcurrentHashMap<>();
+    private final Map<Long, List<TestStepResult>> stepResults = new ConcurrentHashMap<>();
 
     /**
      * 执行测试用例
@@ -74,6 +81,7 @@ public class TestCaseExecutor {
         WebDriver driver = null;
         long startTime = System.currentTimeMillis();
         int passedSteps = 0;
+        List<TestStepResult> results = new ArrayList<>();
 
         try {
             // 创建 WebDriver
@@ -82,26 +90,47 @@ public class TestCaseExecutor {
             // 执行步骤
             for (int i = 0; i < testCase.getSteps().size(); i++) {
                 TestStep step = testCase.getSteps().get(i);
-                String stepName = "Step " + (i + 1) + ": " + step.getAction();
+                String stepName = step.getDescription() != null ? step.getDescription()
+                        : "Step " + (i + 1) + ": " + step.getAction();
+
+                TestStepResult stepResult = new TestStepResult();
+                stepResult.setExecutionId(execution.getId());
+                stepResult.setStepIndex(i + 1);
+                stepResult.setStepName(stepName);
+                stepResult.setAction(step.getAction());
+
+                long stepStart = System.currentTimeMillis();
 
                 try {
                     executeStep(driver, step, testCase.getUrl());
+                    stepResult.setStatus("PASSED");
                     passedSteps++;
                     logger.info("[{}] {} - PASSED", taskId, stepName);
                 } catch (Exception e) {
+                    stepResult.setStatus("FAILED");
+                    stepResult.setError(e.getMessage());
                     logger.error("[{}] {} - FAILED: {}", taskId, stepName, e.getMessage());
+
                     execution.setFailedStep(stepName);
                     execution.setErrorMessage(e.getMessage());
+                }
 
-                    // 截图
-                    String screenshotPath = takeScreenshot(driver, taskId, i + 1);
-                    execution.setScreenshotPath(screenshotPath);
+                // 每个步骤都截图
+                stepResult.setDuration(System.currentTimeMillis() - stepStart);
+                String screenshotPath = takeScreenshot(driver, taskId, i + 1, stepResult.getStatus());
+                stepResult.setScreenshotPath(screenshotPath);
 
-                    throw e;
+                // 保存步骤结果
+                stepResult = stepResultRepository.save(stepResult);
+                results.add(stepResult);
+
+                // 如果步骤失败，停止执行
+                if ("FAILED".equals(stepResult.getStatus())) {
+                    break;
                 }
             }
 
-            execution.setStatus("COMPLETED");
+            execution.setStatus(passedSteps == testCase.getSteps().size() ? "COMPLETED" : "FAILED");
             execution.setPassedSteps(passedSteps);
 
         } catch (Exception e) {
@@ -116,6 +145,7 @@ public class TestCaseExecutor {
             execution.setDuration(System.currentTimeMillis() - startTime);
             testCaseService.saveExecution(execution);
             executions.put(taskId, execution);
+            stepResults.put(execution.getId(), results);
         }
     }
 
@@ -207,7 +237,7 @@ public class TestCaseExecutor {
                 break;
 
             case "screenshot":
-                takeScreenshot(driver, "manual", 0);
+                // 手动截图步骤，截图在步骤完成后自动执行
                 break;
 
             case "refresh":
@@ -264,7 +294,6 @@ public class TestCaseExecutor {
         } else if (locator.startsWith("partial=")) {
             return By.partialLinkText(locator.substring(8));
         } else {
-            // 默认使用 CSS 选择器
             return By.cssSelector(locator);
         }
     }
@@ -309,21 +338,21 @@ public class TestCaseExecutor {
     /**
      * 截图
      */
-    private String takeScreenshot(WebDriver driver, String taskId, int stepNum) {
+    private String takeScreenshot(WebDriver driver, String taskId, int stepNum, String status) {
         try {
             File dir = new File(screenshotDir);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
 
-            String filename = taskId + "_step" + stepNum + ".png";
+            String filename = taskId + "_step" + stepNum + "_" + status.toLowerCase() + ".png";
             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             File destFile = new File(dir, filename);
             FileUtils.copyFile(screenshot, destFile);
 
             logger.info("Screenshot saved: {}", destFile.getAbsolutePath());
             return destFile.getAbsolutePath();
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Failed to take screenshot", e);
             return null;
         }
@@ -334,5 +363,16 @@ public class TestCaseExecutor {
      */
     public TestExecution getExecutionStatus(String taskId) {
         return executions.get(taskId);
+    }
+
+    /**
+     * 获取步骤结果
+     */
+    public List<TestStepResult> getStepResults(Long executionId) {
+        List<TestStepResult> results = stepResults.get(executionId);
+        if (results == null) {
+            results = stepResultRepository.findByExecutionIdOrderByStepIndexAsc(executionId);
+        }
+        return results;
     }
 }
