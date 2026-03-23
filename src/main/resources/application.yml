@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:selenium_test}?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${DB_USER:root}
+    password: ${DB_PASS:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+# Selenium Grid 配置
+grid:
+  url: ${GRID_URL:http://localhost:4444/wd/hub}
+
+# 截图目录
+screenshot:
+  dir: screenshots
+
+# 日志配置
+logging:
+  level:
+    org.zhengjiale: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
