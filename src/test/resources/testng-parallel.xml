@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!-- 并行测试配置 - 用于 Selenium Grid 分布式执行 -->
+<suite name="Selenium Grid Parallel Suite" parallel="tests" thread-count="6">
+    <listeners>
+        <listener class-name="org.zhengjiale.listener.TestListener"/>
+        <listener class-name="org.zhengjiale.listener.RetryAnnotationTransformer"/>
+    </listeners>
+
+    <!-- Chrome 节点测试 - 分组并行执行 -->
+    <test name="Chrome - Selenium Tests">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="org.zhengjiale.tests.SeleniumDevTest"/>
+        </classes>
+    </test>
+
+    <test name="Chrome - Bing Tests">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="org.zhengjiale.tests.BingSearchTest"/>
+        </classes>
+    </test>
+
+    <test name="Chrome - GitHub Tests">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="org.zhengjiale.tests.GitHubTest"/>
+        </classes>
+    </test>
+
+    <!-- Firefox 节点测试 -->
+    <test name="Firefox - Selenium Tests">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="org.zhengjiale.tests.SeleniumDevTest"/>
+        </classes>
+    </test>
+
+    <test name="Firefox - Bing Tests">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="org.zhengjiale.tests.BingSearchTest"/>
+        </classes>
+    </test>
+
+    <test name="Firefox - GitHub Tests">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="org.zhengjiale.tests.GitHubTest"/>
+        </classes>
+    </test>
+</suite>

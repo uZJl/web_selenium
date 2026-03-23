@@ -1,0 +1,54 @@
+version: "3.8"
+
+# 动态扩展配置 - 可通过 docker-compose up --scale 动态扩展节点数
+# 使用方法:
+#   docker-compose -f docker-compose-scaling.yml up --scale chrome-node=4 --scale firefox-node=2
+
+services:
+  selenium-hub:
+    image: selenium/hub:4.18.1
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSION=20
+      - GRID_BROWSER_TIMEOUT=300
+      - GRID_TIMEOUT=300
+    networks:
+      - selenium-grid
+
+  chrome-node:
+    image: selenium/node-chrome:4.18.1
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_VNC_NO_PASSWORD=1
+    shm_size: "2gb"
+    networks:
+      - selenium-grid
+    deploy:
+      replicas: 2   # 默认 2 个节点
+
+  firefox-node:
+    image: selenium/node-firefox:4.18.1
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_VNC_NO_PASSWORD=1
+    shm_size: "2gb"
+    networks:
+      - selenium-grid
+    deploy:
+      replicas: 1   # 默认 1 个节点
+
+networks:
+  selenium-grid:
+    driver: bridge

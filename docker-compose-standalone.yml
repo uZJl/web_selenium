@@ -1,0 +1,16 @@
+version: "3.8"
+
+# 简化版 - 单节点 Standalone 模式
+# 适合开发和小规模测试
+services:
+  selenium-standalone:
+    image: selenium/standalone-chrome:4.18.1
+    container_name: selenium-standalone
+    ports:
+      - "4444:4444"   # Selenium Grid
+      - "7900:7900"   # noVNC (浏览器可视化)
+    shm_size: "2gb"
+    environment:
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1

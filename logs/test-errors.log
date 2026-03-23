@@ -1,0 +1,53 @@
+2026-03-20 18:16:41.367 [TestNG-tests-1] ERROR org.zhengjiale.listener.TestListener - Test Failed: org.zhengjiale.tests.BaiduSearchTest.testSearchFunction
+2026-03-20 18:16:41.368 [TestNG-tests-1] ERROR org.zhengjiale.listener.TestListener - Exception: Expected condition failed: waiting for visibility of element located by By.id: kw (tried for 10 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.3', java.version: '25.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 146.0.7680.80, chrome: {chromedriverVersion: 146.0.7680.153 (85fd829a1b2..., userDataDir: /var/folders/qn/tsr37rrd2xg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:52075}, goog:processID: 2997, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:52075/devtoo..., se:cdpVersion: 146.0.7680.80, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: e0d65c40725beb1c992194b4fdbee3ea
+2026-03-20 18:17:22.671 [TestNG-tests-1] ERROR org.zhengjiale.listener.TestListener - Test Failed: org.zhengjiale.tests.BaiduSearchTest.testSearchResultTitle
+2026-03-20 18:17:22.672 [TestNG-tests-1] ERROR org.zhengjiale.listener.TestListener - Exception: Expected condition failed: waiting for visibility of element located by By.id: kw (tried for 10 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.3', java.version: '25.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 146.0.7680.80, chrome: {chromedriverVersion: 146.0.7680.153 (85fd829a1b2..., userDataDir: /var/folders/qn/tsr37rrd2xg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:52698}, goog:processID: 3327, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:52698/devtoo..., se:cdpVersion: 146.0.7680.80, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 9178c147afaee5bbcc6f8f03af76f474
+2026-03-23 15:08:25.293 [main] ERROR org.zhengjiale.listener.TestListener - Test Failed: org.zhengjiale.tests.BingSearchTest.testChineseSearch
+2026-03-23 15:08:25.295 [main] ERROR org.zhengjiale.listener.TestListener - Exception: Expected condition failed: waiting for title to contain "Bing". Current title: "搜索 - Microsoft 必应" (tried for 10 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.3', java.version: '25.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 146.0.7680.80, chrome: {chromedriverVersion: 146.0.7680.153 (85fd829a1b2..., userDataDir: /var/folders/qn/tsr37rrd2xg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:63391}, goog:processID: 92807, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:63391/devtoo..., se:cdpVersion: 146.0.7680.80, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 7f55fe0cab678382ec60496fd375dbe2
+2026-03-23 15:08:39.898 [main] ERROR org.zhengjiale.listener.TestListener - Test Failed: org.zhengjiale.tests.BingSearchTest.testHomePageLoad
+2026-03-23 15:08:39.899 [main] ERROR org.zhengjiale.listener.TestListener - Exception: Expected condition failed: waiting for title to contain "Bing". Current title: "搜索 - Microsoft 必应" (tried for 10 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.3', java.version: '25.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 146.0.7680.80, chrome: {chromedriverVersion: 146.0.7680.153 (85fd829a1b2..., userDataDir: /var/folders/qn/tsr37rrd2xg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:63784}, goog:processID: 93023, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:63784/devtoo..., se:cdpVersion: 146.0.7680.80, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: dc383c0205932d1d34bf2727b5807b80
+2026-03-23 15:08:53.112 [main] ERROR org.zhengjiale.listener.TestListener - Test Failed: org.zhengjiale.tests.BingSearchTest.testSearchFunction
+2026-03-23 15:08:53.114 [main] ERROR org.zhengjiale.listener.TestListener - Exception: Expected condition failed: waiting for title to contain "Bing". Current title: "搜索 - Microsoft 必应" (tried for 10 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.3', java.version: '25.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 146.0.7680.80, chrome: {chromedriverVersion: 146.0.7680.153 (85fd829a1b2..., userDataDir: /var/folders/qn/tsr37rrd2xg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:64113}, goog:processID: 93124, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:64113/devtoo..., se:cdpVersion: 146.0.7680.80, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 57e7301a8cb13ca23b3b50d4db418691
+2026-03-23 15:10:46.328 [main] ERROR org.zhengjiale.listener.TestListener - Test Failed: org.zhengjiale.tests.SeleniumDevTest.testDocumentationNavigation
+2026-03-23 15:10:46.329 [main] ERROR org.zhengjiale.listener.TestListener - Exception: timeout: Timed out receiving message from renderer: 30.000
+  (Session info: chrome=146.0.7680.80)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.3', java.version: '25.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [130a117027b61eb5f6bc7630d34586d0, findElement {using=css selector, value=a[href='/documentation']}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 146.0.7680.80, chrome: {chromedriverVersion: 146.0.7680.153 (85fd829a1b2..., userDataDir: /var/folders/qn/tsr37rrd2xg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:49271}, goog:processID: 94131, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:49271/devtoo..., se:cdpVersion: 146.0.7680.80, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 130a117027b61eb5f6bc7630d34586d0
+2026-03-23 15:12:17.714 [main] ERROR org.zhengjiale.listener.TestListener - Test Failed: org.zhengjiale.tests.SeleniumDevTest.testDownloadsPage
+2026-03-23 15:12:17.715 [main] ERROR org.zhengjiale.listener.TestListener - Exception: timeout: Timed out receiving message from renderer: 28.286
+  (Session info: chrome=146.0.7680.80)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.3', java.version: '25.0.2'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [b1b8bdb6911f1f8c4b48736ea0077415, get {url=https://www.selenium.dev/downloads}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 146.0.7680.80, chrome: {chromedriverVersion: 146.0.7680.153 (85fd829a1b2..., userDataDir: /var/folders/qn/tsr37rrd2xg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:50928}, goog:processID: 94623, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:50928/devtoo..., se:cdpVersion: 146.0.7680.80, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: b1b8bdb6911f1f8c4b48736ea0077415

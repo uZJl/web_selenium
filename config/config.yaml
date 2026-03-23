@@ -1,0 +1,18 @@
+# Selenium Grid 分布式测试配置
+
+# Selenium Grid 配置
+grid_enabled: false          # 是否启用 Grid（false=本地执行，true=Grid 分布式执行）
+grid_url: "http://localhost:4444/wd/hub"  # Grid Hub 地址
+
+# 浏览器配置
+browser: chrome              # 默认浏览器: chrome, firefox, edge
+headless: false              # 是否无头模式
+
+# 超时配置（秒）
+implicit_wait: 10            # 隐式等待时间
+page_load_timeout: 30        # 页面加载超时
+script_timeout: 30           # 脚本执行超时
+
+# 测试配置
+retry_count: 2               # 失败重试次数
+screenshot_on_failure: true  # 失败时是否截图

@@ -1,0 +1,161 @@
+version: "3.8"
+
+# 生产环境配置 - 高可用 Selenium Grid 集群
+# 包含多个 Chrome 和 Firefox 节点，支持视频录制
+
+services:
+  # Selenium Grid Hub
+  selenium-hub:
+    image: selenium/hub:4.18.1
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+    environment:
+      - GRID_MAX_SESSION=50
+      - GRID_BROWSER_TIMEOUT=300
+      - GRID_TIMEOUT=300
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Chrome Node 1 - 带视频录制
+  chrome-node-1:
+    image: selenium/node-chrome:4.18.1
+    container_name: chrome-node-1
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+      - SE_SCREEN_DEPTH=24
+    shm_size: "2gb"
+    volumes:
+      - ./videos:/opt/selenium/assets
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Chrome Node 2
+  chrome-node-2:
+    image: selenium/node-chrome:4.18.1
+    container_name: chrome-node-2
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+      - SE_SCREEN_DEPTH=24
+    shm_size: "2gb"
+    volumes:
+      - ./videos:/opt/selenium/assets
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Chrome Node 3
+  chrome-node-3:
+    image: selenium/node-chrome:4.18.1
+    container_name: chrome-node-3
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+    shm_size: "2gb"
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Firefox Node 1
+  firefox-node-1:
+    image: selenium/node-firefox:4.18.1
+    container_name: firefox-node-1
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+    shm_size: "2gb"
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Firefox Node 2
+  firefox-node-2:
+    image: selenium/node-firefox:4.18.1
+    container_name: firefox-node-2
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+    shm_size: "2gb"
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+  # Edge Node
+  edge-node:
+    image: selenium/node-edge:4.18.1
+    container_name: edge-node
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+    shm_size: "2gb"
+    networks:
+      - selenium-grid
+    restart: unless-stopped
+
+networks:
+  selenium-grid:
+    driver: bridge
+
+volumes:
+  videos:
